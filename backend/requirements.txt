@@ -1,0 +1,11 @@
+fastapi
+uvicorn
+pydantic
+python-multipart
+langchain
+langgraph
+langchain-nvidia-ai-endpoints
+firebase-admin
+python-dotenv
+sqlalchemy
+psycopg2-binary

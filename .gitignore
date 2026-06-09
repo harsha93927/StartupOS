@@ -1,0 +1,32 @@
+# Dependencies
+node_modules/
+backend/venv/
+
+# Build outputs
+.next/
+dist/
+build/
+out/
+.electron-builder/
+
+# Caches
+*.log
+*.pyc
+__pycache__/
+.cache/
+.npm/
+.eslintcache
+
+# Environment
+.env
+.env.local
+
+# Project specific
+reports/
+workspace/
+
+# Misc
+.DS_Store
+.replit
+.claude/
+pnpm-lock.yaml
