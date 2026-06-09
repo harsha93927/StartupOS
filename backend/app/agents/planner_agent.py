@@ -8,7 +8,8 @@ class PlannerState(TypedDict):
     goals: List[str]
     recommended_agents: List[str]
     clarification_questions: List[str]
-    next_step: str
+    current_agent: str
+    reports: Dict[str, Any]
 
 class PlannerAgent:
     def __init__(self, api_key: str = None):
@@ -26,16 +27,24 @@ class PlannerAgent:
 
         response_text = await self.nvidia.generate_response(system_prompt, user_prompt)
         try:
-            # Attempt to find JSON in the response
             start_idx = response_text.find('{')
             end_idx = response_text.rfind('}') + 1
             json_str = response_text[start_idx:end_idx]
             return json.loads(json_str)
         except Exception as e:
-            print(f"Error parsing Planner response: {e}")
             return {"error": "Failed to analyze vision", "raw": response_text}
 
     def create_graph(self):
         workflow = StateGraph(PlannerState)
-        # Define the graph nodes and edges
+
+        def planner_node(state: PlannerState):
+            # Logic to decide next agent or finish
+            if not state.get("current_agent"):
+                return {"current_agent": state["recommended_agents"][0]}
+            return {"current_agent": END}
+
+        workflow.add_node("planner", planner_node)
+        workflow.set_entry_point("planner")
+        workflow.add_edge("planner", END)
+
         return workflow.compile()
